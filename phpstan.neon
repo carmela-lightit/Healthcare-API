@@ -13,5 +13,3 @@ parameters:
 
     ignoreErrors:
         - message: '#^Illuminate\\Support\\Facades\\[a-zA-Z0-9\\_]+ facade should not be used\.$#'
-        - message: '#.*#'
-          path: tests/Architecture/*
