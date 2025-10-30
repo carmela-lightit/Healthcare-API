@@ -56,14 +56,10 @@ Route::prefix('users')
 |--------------------------------------------------------------------------
 */
 Route::prefix('doctors')
-    ->middleware([])
     ->group(static function (): void {
         Route::get('/', ListDoctorController::class);
-        Route::get('/{doctor}', GetDoctorController::class)
-            ->whereNumber('doctor');
+        Route::get('/{doctor}', GetDoctorController::class);
         Route::post('/', StoreDoctorController::class);
-        Route::put('/{doctor}', UpdateDoctorController::class)
-            ->whereNumber('doctor');
-        Route::delete('/{doctor}', DeleteDoctorController::class)
-            ->whereNumber('doctor');
-    });
+        Route::put('/{doctor}', UpdateDoctorController::class);
+        Route::delete('/{doctor}', DeleteDoctorController::class);
+    })->whereNumber('doctor');
