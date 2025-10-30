@@ -58,8 +58,11 @@ Route::prefix('users')
 Route::prefix('doctors')
     ->group(static function (): void {
         Route::get('/', ListDoctorController::class);
-        Route::get('/{doctor}', GetDoctorController::class);
         Route::post('/', StoreDoctorController::class);
-        Route::put('/{doctor}', UpdateDoctorController::class);
-        Route::delete('/{doctor}', DeleteDoctorController::class);
-    })->whereNumber('doctor');
+        Route::prefix('{doctor}')
+            ->group(static function (): void {
+                Route::get('/', GetDoctorController::class);
+                Route::put('/', UpdateDoctorController::class);
+                Route::delete('/', DeleteDoctorController::class);
+            })->whereNumber('doctor');
+    });
