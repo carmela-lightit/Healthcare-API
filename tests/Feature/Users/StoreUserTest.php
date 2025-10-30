@@ -7,7 +7,6 @@ namespace Tests\Feature\Users;
 use Database\Factories\UserFactory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Lightit\Users\App\Controllers\StoreUserController;
 use Lightit\Users\App\Notifications\UserRegisteredNotification;
@@ -17,11 +16,6 @@ use Tests\RequestFactories\StoreUserRequestFactory;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\postJson;
-
-function getLongName(): string
-{
-    return Str::repeat(string: 'name', times: random_int(min: 30, max: 50));
-}
 
 function getATakenEmail(): string
 {

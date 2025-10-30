@@ -16,7 +16,7 @@ dataset(name: 'validation-rules', dataset: [
     'name is required' => ['name', ''],
     'name must be string' => ['name', ['array']],
     'name not too short' => ['name', 'Dr'],
-    'name not too long' => ['name', str_repeat('a', 101)],
+    'name not too long' => ['name', getLongName()],
 ]);
 
 describe('doctors', function (): void {
