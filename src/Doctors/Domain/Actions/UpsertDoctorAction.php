@@ -7,11 +7,13 @@ namespace Lightit\Doctors\Domain\Actions;
 use Lightit\Doctors\Domain\DataTransferObjects\DoctorDto;
 use Lightit\Doctors\Domain\Models\Doctor;
 
-class StoreDoctorAction
+class UpsertDoctorAction
 {
-    public function execute(DoctorDto $doctorDto): Doctor
+    public function execute(DoctorDto $doctorDto, Doctor|null $doctor = null): Doctor
     {
-        $doctor = new Doctor();
+        if (! $doctor instanceof Doctor) {
+            $doctor = new Doctor();
+        }
 
         $doctor->name = $doctorDto->name;
 
