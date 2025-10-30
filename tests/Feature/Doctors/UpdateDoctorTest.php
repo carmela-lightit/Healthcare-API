@@ -51,6 +51,6 @@ describe('doctors', function (): void {
         $response = putJson(url("/api/doctors/{$existingDoctor->id}"), $data);
 
         $response->assertUnprocessable()
-            ->assertJsonValidationErrors(['name'], 'error.fields');
+            ->assertJsonValidationErrorFor('name', 'error.fields');
     });
 });
