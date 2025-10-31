@@ -76,7 +76,7 @@ Always use `sail` prefix for Docker commands:
 ### Sanctum Authentication
 - Uses Laravel Sanctum for API authentication
 - Routes protected with `auth:sanctum` middleware
-- Custom User model: `Lightit\Backoffice\Users\Domain\Models\User`
+- Custom User model: `Lightit\Users\Domain\Models\User`
 
 ### API Documentation
 - **Scramble** generates OpenAPI/Swagger docs automatically

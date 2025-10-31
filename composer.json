@@ -15,12 +15,15 @@
     "laravel/framework": "^12.0",
     "laravel/sanctum": "^4.0",
     "laravel/tinker": "^2.10.1",
-    "sentry/sentry-laravel": "^4.4",
+    "light-it-labs/lightit-auth-laravel": "^1.1",
+    "php-open-source-saver/jwt-auth": "^2.0",
+    "sentry/sentry-laravel": "^4.18",
     "spatie/laravel-query-builder": "^6.0"
   },
   "require-dev": {
-    "barryvdh/laravel-ide-helper": "^3.0",
+    "barryvdh/laravel-ide-helper": "^3.6",
     "brianium/paratest": "^7.4",
+    "captainhook/captainhook": "^5.25",
     "captainhook/hook-installer": "^1.0",
     "captainhook/plugin-composer": "^5.3",
     "driftingly/rector-laravel": "^2.1",
@@ -37,7 +40,7 @@
     "sojeda/conventional-commits": "^1.5",
     "spatie/laravel-ignition": "^2.4",
     "webgriffe/captainhook": "^2.1",
-    "worksome/coding-style": "^3.0",
+    "worksome/coding-style": "^3.3",
     "worksome/request-factories": "^3.3"
   },
   "autoload": {
@@ -67,13 +70,17 @@
     ],
     "post-autoload-dump": [
       "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-      "@php artisan package:discover --ansi"
+      "@php artisan package:discover --ansi",
+      "vendor/bin/captainhook install -f -s"
     ],
     "post-update-cmd": [
-      "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+      "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+      "@php artisan ide-helper:generate",
+      "@php artisan ide-helper:meta"
     ],
     "post-root-package-install": [
-      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+      "vendor/bin/captainhook install -f -s"
     ],
     "post-create-project-cmd": [
       "@php artisan key:generate --ansi",
@@ -111,5 +118,11 @@
     }
   },
   "minimum-stability": "stable",
-  "prefer-stable": true
+  "prefer-stable": true,
+  "repositories": [
+      {
+          "type": "vcs",
+          "url": "https://github.com/Light-it-labs/lightit-auth-laravel.git"
+      }
+  ]
 }
