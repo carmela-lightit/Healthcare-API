@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Str;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -40,3 +42,8 @@ uses(
 | global functions to help you to reduce the number of lines of code in your test files.
 |
 */
+
+function getLongName(): string
+{
+    return Str::repeat(string: 'name', times: random_int(min: 30, max: 50));
+}

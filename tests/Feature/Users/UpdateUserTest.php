@@ -19,7 +19,7 @@ beforeEach(fn () => Notification::fake());
 
 describe('users', function (): void {
     /** @see UpdateUserController */
-    it('can create a user successfully', function (): void {
+    it('can update a user successfully', function (): void {
         $user = UserFactory::new()->createOne([
             'name' => 'old',
         ]);
@@ -71,7 +71,7 @@ describe('users', function (): void {
         ]);
     });
 
-    it('cannot create a user with invalid data', function (): void {
+    it('cannot update a user with invalid data', function (): void {
         $existingUser = UserFactory::new()->createOne();
 
         $data = [
