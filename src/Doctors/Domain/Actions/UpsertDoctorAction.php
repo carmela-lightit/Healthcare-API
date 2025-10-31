@@ -19,6 +19,10 @@ class UpsertDoctorAction
 
         $doctor->saveOrFail();
 
+        $doctor->clinics()->attach($doctorDto->clinicIds);
+
+        $doctor->load('clinics');
+
         return $doctor;
     }
 }

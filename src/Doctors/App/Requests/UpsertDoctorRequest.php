@@ -11,6 +11,8 @@ class UpsertDoctorRequest extends FormRequest
 {
     public const string NAME = 'name';
 
+    public const string CLINIC_IDS = 'clinic_ids';
+
     /**
      * @return array<string, array<int, string>>
      */
@@ -18,13 +20,19 @@ class UpsertDoctorRequest extends FormRequest
     {
         return [
             self::NAME => ['required', 'string', 'min:3', 'max:100'],
+            self::CLINIC_IDS => ['sometimes', 'array'],
+            self::CLINIC_IDS . '.*' => ['integer', 'exists:clinics,id'],
         ];
     }
 
     public function toDto(): DoctorDto
     {
+        /** @var array<int> $clinicIds */
+        $clinicIds = $this->input(self::CLINIC_IDS) ?? [];
+
         return new DoctorDto(
             name: $this->string(self::NAME)->toString(),
+            clinicIds: $clinicIds
         );
     }
 }
