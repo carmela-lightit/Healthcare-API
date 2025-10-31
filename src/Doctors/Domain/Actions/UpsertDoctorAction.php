@@ -11,9 +11,7 @@ class UpsertDoctorAction
 {
     public function execute(DoctorDto $doctorDto, Doctor|null $doctor = null): Doctor
     {
-        if (! $doctor instanceof Doctor) {
-            $doctor = new Doctor();
-        }
+        $doctor ??= new Doctor();
 
         $doctor->name = $doctorDto->name;
 

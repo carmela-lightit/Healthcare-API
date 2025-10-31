@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Lightit\Clinics\Domain\DataTransferObjects;
 
-final class ClinicDto
+final readonly class ClinicDto
 {
     /**
      * @param array<int> $doctorIds
      */
     public function __construct(
-        public readonly string $name,
-        public readonly string $address,
-        public readonly array $doctorIds = [],
+        public string $name,
+        public string $address,
+        public array $doctorIds,
     ) {
     }
 }

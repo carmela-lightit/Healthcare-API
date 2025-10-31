@@ -11,9 +11,7 @@ class UpsertClinicAction
 {
     public function execute(ClinicDto $clinicDto, Clinic|null $clinic = null): Clinic
     {
-        if (! $clinic instanceof Clinic) {
-            $clinic = new Clinic();
-        }
+        $clinic ??= new Clinic();
 
         $clinic->name = $clinicDto->name;
         $clinic->address = $clinicDto->address;
