@@ -6,7 +6,6 @@ namespace Tests\Feature\Doctors;
 
 use Illuminate\Testing\Fluent\AssertableJson;
 use Lightit\Doctors\App\Controllers\StoreDoctorController;
-use Lightit\Doctors\App\Resources\DoctorResource;
 use Lightit\Doctors\Domain\Models\Doctor;
 use Tests\RequestFactories\StoreDoctorRequestFactory;
 use function Pest\Laravel\assertDatabaseHas;
@@ -34,12 +33,13 @@ describe('doctors', function (): void {
             ->assertCreated()
             ->assertJson(
                 fn (AssertableJson $json): AssertableJson =>
-                $json->has(
-                    'data',
-                    fn (AssertableJson $json): AssertableJson => $json->whereAll(
-                        DoctorResource::make($doctor)->resolve()
+                    $json->has(
+                        'data',
+                        fn (AssertableJson $json): AssertableJson =>
+                            $json
+                                ->where('id', $doctor->id)
+                                ->where('name', $doctor->name)
                     )
-                )
             );
 
         assertDatabaseHas('doctors', ['name' => $data['name']]);
