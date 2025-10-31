@@ -20,9 +20,7 @@ class UpsertClinicAction
 
         $clinic->saveOrFail();
 
-        if ($clinicDto->doctorIds !== []) {
-            $clinic->doctors()->attach($clinicDto->doctorIds);
-        }
+        $clinic->doctors()->attach($clinicDto->doctorIds);
 
         $clinic->loadCount('doctors');
 
