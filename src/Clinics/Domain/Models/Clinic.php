@@ -20,7 +20,7 @@ class Clinic extends Model
     public function doctors(): BelongsToMany
     {
         /** @var BelongsToMany<Doctor, Clinic> $relation */
-        $relation = $this->belongsToMany(Doctor::class)->withTimestamps();
+        $relation = $this->belongsToMany(Doctor::class);
 
         return $relation;
     }
