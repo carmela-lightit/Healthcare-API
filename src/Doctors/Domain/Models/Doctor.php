@@ -13,8 +13,6 @@ class Doctor extends Model
     protected $guarded = ['id'];
 
     /**
-     * Clinics where this doctor works.
-     *
      * @return BelongsToMany<Clinic, Doctor>
      */
     public function clinics(): BelongsToMany

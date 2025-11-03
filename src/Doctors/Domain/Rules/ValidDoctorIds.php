@@ -21,7 +21,7 @@ class ValidDoctorIds implements ValidationRule
             return;
         }
 
-        $ids = array_map(fn ($id): int => (int) $id, $value);
+        $ids = array_map('intval', $value);
 
         $existingCount = Doctor::query()
             ->whereIn('id', $ids)
