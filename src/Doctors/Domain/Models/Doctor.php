@@ -13,13 +13,10 @@ class Doctor extends Model
     protected $guarded = ['id'];
 
     /**
-     * @return BelongsToMany<Clinic, Doctor>
+     * @return BelongsToMany<Clinic, $this>
      */
     public function clinics(): BelongsToMany
     {
-        /** @var BelongsToMany<Clinic, Doctor> $relation */
-        $relation = $this->belongsToMany(Clinic::class);
-
-        return $relation;
+        return $this->belongsToMany(Clinic::class);
     }
 }
