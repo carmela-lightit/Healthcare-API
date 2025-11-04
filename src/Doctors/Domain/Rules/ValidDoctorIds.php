@@ -12,16 +12,20 @@ use Lightit\Doctors\Domain\Models\Doctor;
 class ValidDoctorIds implements ValidationRule
 {
     /**
-     * @param array<int, int|string>|null                  $value
+     * @param int|array<int, int|string>|null              $value
      * @param Closure(string): PotentiallyTranslatedString $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (! is_array($value) || $value === []) {
+        if ($value === null) {
             return;
         }
 
-        $ids = array_map('intval', $value);
+        $ids = is_array($value) ? array_map('intval', $value) : [(int) $value];
+
+        if ($ids === []) {
+            return;
+        }
 
         $existingCount = Doctor::query()
             ->whereIn('id', $ids)
