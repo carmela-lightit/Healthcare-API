@@ -5,6 +5,11 @@ declare(strict_types=1);
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Support\Facades\Route;
 use Lightit\Users\App\Controllers\{GetUserController, DeleteUserController, ListUserController, StoreUserController, UpdateUserController};
+use Lightit\Authentication\App\Controllers\{
+    LoginController,
+    LogoutController,
+    RefreshController
+};
 use Lightit\Doctors\App\Controllers\{
     GetDoctorController,
     ListDoctorController,
@@ -31,7 +36,7 @@ use Lightit\Clinics\App\Controllers\{
 |
 */
 
-Route::middleware('auth:sanctum')
+Route::middleware('auth:api')
     ->get('/me', fn(
         #[CurrentUser] $user
     ) => response()->json([
@@ -47,15 +52,27 @@ Route::prefix('users')
     ->middleware([])
     ->group(static function (): void {
         Route::get('/', ListUserController::class);
-        Route::get('/{user}', GetUserController::class)
-            ->withTrashed()
-            ->whereNumber('user');
         Route::post('/', StoreUserController::class);
-        Route::put('/{user}', UpdateUserController::class)
-            ->whereNumber('user');
-        Route::delete('/{user}', DeleteUserController::class)
-            ->whereNumber('user');
+        Route::prefix('{user}')
+            ->group(static function (): void {
+                Route::get('/', GetUserController::class)->withTrashed();
+                Route::put('/', UpdateUserController::class);
+                Route::delete('/', DeleteUserController::class);
+            })->whereNumber('user');
     });
+
+/*
+|--------------------------------------------------------------------------
+| Auth Routes
+|--------------------------------------------------------------------------
+*/
+Route::prefix('auth')->group(static function (): void {
+    Route::post('login', LoginController::class);
+    Route::middleware('auth:api')->group(static function (): void {
+        Route::post('logout', LogoutController::class);
+        Route::post('refresh', RefreshController::class);
+    });
+});
 
 /*
 |--------------------------------------------------------------------------
