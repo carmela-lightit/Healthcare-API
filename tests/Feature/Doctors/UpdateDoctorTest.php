@@ -37,6 +37,7 @@ describe('doctors', function (): void {
                             $json
                                 ->where('id', $doctor->id)
                                 ->where('name', $doctor->name)
+                                ->has('clinics')
                     )
             );
 

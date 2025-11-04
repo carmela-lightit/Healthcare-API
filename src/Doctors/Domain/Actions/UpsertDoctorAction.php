@@ -11,13 +11,15 @@ class UpsertDoctorAction
 {
     public function execute(DoctorDto $doctorDto, Doctor|null $doctor = null): Doctor
     {
-        if (! $doctor instanceof Doctor) {
-            $doctor = new Doctor();
-        }
+        $doctor ??= new Doctor();
 
         $doctor->name = $doctorDto->name;
 
         $doctor->saveOrFail();
+
+        $doctor->clinics()->attach($doctorDto->clinicIds);
+
+        $doctor->load('clinics');
 
         return $doctor;
     }
