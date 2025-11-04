@@ -68,8 +68,10 @@ Route::prefix('users')
 */
 Route::prefix('auth')->group(static function (): void {
     Route::post('login', LoginController::class);
-    Route::post('logout', LogoutController::class);
-    Route::post('refresh', RefreshController::class);
+    Route::middleware('auth:api')->group(static function (): void {
+        Route::post('logout', LogoutController::class);
+        Route::post('refresh', RefreshController::class);
+    });
 });
 
 /*
