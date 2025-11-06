@@ -15,13 +15,10 @@ use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use Lightit\Appointments\App\Policies\AppointmentPolicy;
-use Lightit\Appointments\Domain\Models\Appointment;
 use Lightit\Security\Domain\Actions\PreventDebugInProductionAction;
 
 class AppServiceProvider extends ServiceProvider
@@ -71,7 +68,5 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
             $this->app->register(TelescopeServiceProvider::class);
         }
-
-        Gate::policy(Appointment::class, AppointmentPolicy::class);
     }
 }
