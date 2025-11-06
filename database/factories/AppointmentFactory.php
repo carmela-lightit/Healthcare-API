@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
+use Carbon\CarbonImmutable;
 use Lightit\Appointments\Domain\Models\Appointment;
 
 /**
@@ -18,17 +18,17 @@ class AppointmentFactory extends Factory
     public function definition(): array
     {
         $user = UserFactory::new()->createOne();
-        $doctor = DoctorFactory::new()->createOne();
-        $clinic = ClinicFactory::new()->createOne();
-        $doctor->clinics()->attach($clinic->id);
+        $doctor = DoctorFactory::new()
+            ->has(ClinicFactory::new())
+            ->createOne();
 
-        $startsAt = Carbon::now()->addDay()->startOfHour();
-        $endsAt = Carbon::now()->addDay()->startOfHour()->addHour();
+        $startsAt = CarbonImmutable::now()->addDay()->startOfHour();
+        $endsAt = $startsAt->addHour();
 
         return [
             'user_id' => $user->id,
             'doctor_id' => $doctor->id,
-            'clinic_id' => $clinic->id,
+            'clinic_id' => $doctor->clinics()->firstOrFail()->id,
             'starts_at' => $startsAt,
             'ends_at' => $endsAt,
         ];

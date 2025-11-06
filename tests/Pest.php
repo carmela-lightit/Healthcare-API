@@ -2,14 +2,7 @@
 
 declare(strict_types=1);
 
-use Database\Factories\AppointmentFactory;
-use Database\Factories\ClinicFactory;
-use Database\Factories\DoctorFactory;
 use Illuminate\Support\Str;
-use Lightit\Appointments\Domain\Models\Appointment;
-use Lightit\Clinics\Domain\Models\Clinic;
-use Lightit\Doctors\Domain\Models\Doctor;
-use Lightit\Users\Domain\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,33 +46,4 @@ uses(
 function getLongName(): string
 {
     return Str::repeat(string: 'name', times: random_int(min: 30, max: 50));
-}
-
-/**
- * @return array{0: Doctor, 1: Clinic}
- */
-function makeDoctorAndClinic(): array
-{
-    $doctor = DoctorFactory::new()->createOne();
-    $clinic = ClinicFactory::new()->createOne();
-    $doctor->clinics()->attach($clinic->id);
-
-    return [$doctor, $clinic];
-}
-
-/**
- * @return array<Appointment>
- */
-function makeAppointment(User $user, Doctor|null $doctor = null, Clinic|null $clinic = null): array
-{
-    if (! $doctor || ! $clinic) {
-        [$doctor, $clinic] = makeDoctorAndClinic();
-    }
-    $appointment = AppointmentFactory::new()->createOne([
-        'user_id' => $user->id,
-        'doctor_id' => $doctor->id,
-        'clinic_id' => $clinic->id,
-    ]);
-
-    return [$appointment];
 }
