@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace Lightit\Appointments\Domain\Rules;
 
+use Carbon\CarbonImmutable;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Translation\PotentiallyTranslatedString;
 use Lightit\Appointments\Domain\Models\Appointment;
 
 final class NoDoctorAppointmentOverlapRule implements ValidationRule
 {
-    public function __construct(private readonly Request $request)
-    {
+    public function __construct(
+        private readonly int $doctorId,
+        private readonly CarbonImmutable $startsAt,
+        private readonly CarbonImmutable $endsAt,
+    ) {
     }
 
     /**
@@ -22,24 +25,16 @@ final class NoDoctorAppointmentOverlapRule implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $doctorId = $this->request->input('doctor_id');
-        $startsAt = $this->request->input('starts_at');
-        $endsAt = $this->request->input('ends_at');
-
-        if (! $doctorId || ! $startsAt || ! $endsAt) {
-            return;
-        }
-
         $overlap = Appointment::query()
-            ->where('doctor_id', $doctorId)
-            ->where(function (Builder $query) use ($startsAt, $endsAt): void {
+            ->where('doctor_id', $this->doctorId)
+            ->where(function (Builder $query): void {
                 $query
-                    ->whereBetween('starts_at', [$startsAt, $endsAt])
-                    ->orWhereBetween('ends_at', [$startsAt, $endsAt])
+                    ->whereBetween('starts_at', [$this->startsAt, $this->endsAt])
+                    ->orWhereBetween('ends_at', [$this->startsAt, $this->endsAt])
                     ->orWhere(
-                        function (Builder $q) use ($startsAt, $endsAt): void {
-                            $q->where('starts_at', '<=', $startsAt)
-                              ->where('ends_at', '>=', $endsAt);
+                        function (Builder $q): void {
+                            $q->where('starts_at', '<=', $this->startsAt)
+                              ->where('ends_at', '>=', $this->endsAt);
                         }
                     );
             })

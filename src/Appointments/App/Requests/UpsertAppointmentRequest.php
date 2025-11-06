@@ -15,6 +15,7 @@ use Lightit\Appointments\Domain\Rules\NoDoctorAppointmentOverlapRule;
 use Lightit\Appointments\Domain\Rules\NoUserAppointmentOverlapRule;
 use Lightit\Clinics\Domain\Rules\ValidClinicIds;
 use Lightit\Doctors\Domain\Rules\ValidDoctorIds;
+use Lightit\Users\Domain\Models\User;
 
 final class UpsertAppointmentRequest extends FormRequest
 {
@@ -31,13 +32,22 @@ final class UpsertAppointmentRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var User $user */
+        $user = $this->user();
+        $doctorId = (int) $this->integer(self::DOCTOR_ID);
+        $clinicId = (int) $this->integer(self::CLINIC_ID);
+        $startsAt = CarbonImmutable::parse($this->string(self::STARTS_AT)->toString());
+        $endsAt = CarbonImmutable::parse($this->string(self::ENDS_AT)->toString());
+
         return [
-            self::DOCTOR_ID => ['required', 'integer', new ValidDoctorIds(), new DoctorClinicAssignmentRule($this)],
+            self::DOCTOR_ID => ['required', 'integer',
+                new ValidDoctorIds(),
+                new DoctorClinicAssignmentRule($doctorId, $clinicId)],
             self::CLINIC_ID => ['required', 'integer', new ValidClinicIds()],
             self::STARTS_AT => ['required',
                 Rule::date()->afterOrEqual('now'),
-                new NoDoctorAppointmentOverlapRule($this),
-                new NoUserAppointmentOverlapRule($this)],
+                new NoDoctorAppointmentOverlapRule($doctorId, $startsAt, $endsAt),
+                new NoUserAppointmentOverlapRule($user->id, $startsAt, $endsAt)],
             self::ENDS_AT => ['required', Rule::date()->after(self::STARTS_AT)],
         ];
     }
