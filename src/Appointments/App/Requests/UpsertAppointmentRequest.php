@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Lightit\Appointments\App\Requests;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Date;
 use Lightit\Appointments\Domain\DataTransferObjects\AppointmentDto;
 use Lightit\Appointments\Domain\Rules\DoctorClinicAssignmentRule;
 use Lightit\Appointments\Domain\Rules\NoDoctorAppointmentOverlapRule;
@@ -24,17 +27,18 @@ final class UpsertAppointmentRequest extends FormRequest
     public const string ENDS_AT = 'ends_at';
 
     /**
-     * @return array<string, list<string|ValidationRule>>
+     * @return array<string, list<string|ValidationRule|Date>>
      */
     public function rules(): array
     {
         return [
             self::DOCTOR_ID => ['required', 'integer', new ValidDoctorIds(), new DoctorClinicAssignmentRule($this)],
             self::CLINIC_ID => ['required', 'integer', new ValidClinicIds()],
-            self::STARTS_AT => ['required', 'date', 'after_or_equal:now',
+            self::STARTS_AT => ['required',
+                Rule::date()->afterOrEqual('now'),
                 new NoDoctorAppointmentOverlapRule($this),
                 new NoUserAppointmentOverlapRule($this)],
-            self::ENDS_AT => ['required', 'date', 'after:' . self::STARTS_AT],
+            self::ENDS_AT => ['required', Rule::date()->after(self::STARTS_AT)],
         ];
     }
 
@@ -44,8 +48,8 @@ final class UpsertAppointmentRequest extends FormRequest
             doctorId: (int) $this->integer(self::DOCTOR_ID),
             clinicId: (int) $this->integer(self::CLINIC_ID),
             userId: (int) $this->user()?->id,
-            startsAt: $this->string(self::STARTS_AT)->toString(),
-            endsAt: $this->string(self::ENDS_AT)->toString(),
+            startsAt: CarbonImmutable::parse($this->string(self::STARTS_AT)->toString()),
+            endsAt: CarbonImmutable::parse($this->string(self::ENDS_AT)->toString()),
         );
     }
 }
