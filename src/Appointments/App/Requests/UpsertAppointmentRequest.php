@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Lightit\Appointments\App\Requests;
 
 use Carbon\CarbonImmutable;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -30,12 +31,10 @@ final class UpsertAppointmentRequest extends FormRequest
     /**
      * @return array<string, list<string|ValidationRule|Date>>
      */
-    public function rules(): array
+    public function rules(#[CurrentUser] User $user): array
     {
-        /** @var User $user */
-        $user = $this->user();
-        $doctorId = (int) $this->integer(self::DOCTOR_ID);
-        $clinicId = (int) $this->integer(self::CLINIC_ID);
+        $doctorId = $this->integer(self::DOCTOR_ID);
+        $clinicId = $this->integer(self::CLINIC_ID);
         $startsAt = CarbonImmutable::parse($this->string(self::STARTS_AT)->toString());
         $endsAt = CarbonImmutable::parse($this->string(self::ENDS_AT)->toString());
 
@@ -52,12 +51,12 @@ final class UpsertAppointmentRequest extends FormRequest
         ];
     }
 
-    public function toDto(): AppointmentDto
+    public function toDto(#[CurrentUser] User $user): AppointmentDto
     {
         return new AppointmentDto(
-            doctorId: (int) $this->integer(self::DOCTOR_ID),
-            clinicId: (int) $this->integer(self::CLINIC_ID),
-            userId: (int) $this->user()?->id,
+            doctorId: $this->integer(self::DOCTOR_ID),
+            clinicId: $this->integer(self::CLINIC_ID),
+            userId: $user->id,
             startsAt: CarbonImmutable::parse($this->string(self::STARTS_AT)->toString()),
             endsAt: CarbonImmutable::parse($this->string(self::ENDS_AT)->toString()),
         );

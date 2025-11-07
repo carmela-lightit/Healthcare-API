@@ -17,18 +17,16 @@ class AppointmentFactory extends Factory
 
     public function definition(): array
     {
-        $user = UserFactory::new()->createOne();
-        $doctor = DoctorFactory::new()
-            ->has(ClinicFactory::new())
-            ->createOne();
-
+        $clinicFactory = ClinicFactory::new();
+        $doctorFactory = DoctorFactory::new()
+            ->has($clinicFactory);
         $startsAt = CarbonImmutable::now()->addDay()->startOfHour();
         $endsAt = $startsAt->addHour();
 
         return [
-            'user_id' => $user->id,
-            'doctor_id' => $doctor->id,
-            'clinic_id' => $doctor->clinics()->firstOrFail()->id,
+            'user_id' => UserFactory::new(),
+            'doctor_id' => $doctorFactory,
+            'clinic_id' => $clinicFactory,
             'starts_at' => $startsAt,
             'ends_at' => $endsAt,
         ];
