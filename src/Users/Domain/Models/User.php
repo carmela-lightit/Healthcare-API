@@ -17,7 +17,7 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
  *
  * @property int                          $id
  * @property string                       $name
- * @property mixed|null                   $email
+ * @property string|null                  $email
  * @property \Carbon\CarbonImmutable|null $email_verified_at
  * @property string                       $password
  * @property string|null                  $remember_token
