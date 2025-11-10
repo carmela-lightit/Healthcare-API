@@ -21,6 +21,10 @@ use Lightit\Users\Domain\Models\User;
  * @property int             $user_id
  * @property CarbonImmutable $starts_at
  * @property CarbonImmutable $ends_at
+ *
+ * @property-read Doctor     $doctor
+ * @property-read Clinic     $clinic
+ * @property-read User       $user
  */
 #[UsePolicy(AppointmentPolicy::class)]
 class Appointment extends Model

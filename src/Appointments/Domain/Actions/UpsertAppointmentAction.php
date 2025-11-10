@@ -23,7 +23,7 @@ final class UpsertAppointmentAction
         $appointment->saveOrFail();
         $appointment->load(['doctor', 'clinic', 'user']);
 
-        $appointment->user?->notify(new AppointmentCreatedNotification($appointment));
+        $appointment->user->notify(new AppointmentCreatedNotification($appointment));
 
         return $appointment;
     }
