@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Lightit\Appointments\Domain\Actions;
 
+use Lightit\Appointments\App\Notifications\AppointmentCreatedNotification;
 use Lightit\Appointments\Domain\DataTransferObjects\AppointmentDto;
 use Lightit\Appointments\Domain\Models\Appointment;
 
@@ -20,8 +21,9 @@ final class UpsertAppointmentAction
         $appointment->ends_at = $dto->endsAt;
 
         $appointment->saveOrFail();
-
         $appointment->load(['doctor', 'clinic', 'user']);
+
+        $appointment->user->notify(new AppointmentCreatedNotification($appointment));
 
         return $appointment;
     }
