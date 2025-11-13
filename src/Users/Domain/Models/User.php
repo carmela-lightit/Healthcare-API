@@ -17,7 +17,7 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
  *
  * @property int                          $id
  * @property string                       $name
- * @property string|null                  $email
+ * @property string                       $email
  * @property \Carbon\CarbonImmutable|null $email_verified_at
  * @property string                       $password
  * @property string|null                  $remember_token
@@ -73,11 +73,11 @@ class User extends Authenticatable implements JWTSubject
     protected function email(): Attribute
     {
         return Attribute::make(
-            get: static function (mixed $value) {
+            get: static function (mixed $value): string {
                 /** @var string $value */
                 return strtolower($value);
             },
-            set: static function (mixed $value) {
+            set: static function (mixed $value): string {
                 /** @var string $value */
                 return strtolower($value);
             },
